@@ -14,28 +14,37 @@ from tf_pose.networks import get_graph_path, model_wh
 # movie_name = 'climbing2'
 
 img_outdir = './img'
+video_outdir = './output'
+video_inputdir = './input'
 os.makedirs(img_outdir, exist_ok=True)
-
-# 動画作成
-fourcc = cv2.VideoWriter_fourcc('m','p','4', 'v')
-#video  = cv2.VideoWriter('ImgVideo2.mov', fourcc, 30.0, (540, 960))
-video  = cv2.VideoWriter('ImgVideo2.mp4', fourcc, 10.0, (640, 360))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='tf-pose-estimation Video')
+    parser.add_argument('mp4file', type=str, default='')
+    
+    args = parser.parse_args()
+
+    # 動画読み込み
+    cap = cv2.VideoCapture('{0}/{1}'.format(video_inputdir, args.mp4file))
+    
+    w = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
+    h = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
+    fps = cap.get(cv2.CAP_PROP_FPS)
 
     outimg_files = []
     count = 0
-    #w = 544 
-    #h = 960
-    w = 640 
-    h = 368
-    e = TfPoseEstimator(get_graph_path('mobilenet_thin'), target_size=(w, h))
 
-    # 動画読み込み
-    cap = cv2.VideoCapture('videoplayback01_10.mp4')
+    # 処理サイズ、内部16の倍数
+    inw = w + (16 - w % 16)
+    inh = h + (16 - h % 16)   
+
+    e = TfPoseEstimator(get_graph_path('mobilenet_thin'), target_size=(inw, inh))
 
     # 動画用の画像作成
+    outfile = '{0}/{1}'.format(video_outdir, args.mp4file)
+    fourcc = cv2.VideoWriter_fourcc('m','p','4', 'v')
+    video  = cv2.VideoWriter(outfile, fourcc, fps, (w, h))
+
     while True:
         ret, image = cap.read()
 
@@ -45,7 +54,7 @@ if __name__ == '__main__':
             if count % 100 == 0:
                 print('Image No.：{0}'.format(count))
 
-            humans = e.inference(image, resize_to_default=(w > 0 and h > 0), upsample_size=4)
+            humans = e.inference(image, resize_to_default=(inw > 0 and inh > 0), upsample_size=4)
             image = TfPoseEstimator.draw_humans(image, humans, imgcopy=False)
 
             # 画像出力
