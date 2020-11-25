@@ -150,9 +150,12 @@ def get_graph_path(model_name):
 
     raise Exception('Graph file doesn\'t exist, path=%s' % graph_path)
 
+def resize(size):
+  p = 0 if (size % 16 == 0) else (16 - size % 16)
+  return size + p
 
 def model_wh(resolution_str):
     width, height = map(int, resolution_str.split('x'))
-    if width % 16 != 0 or height % 16 != 0:
-        raise Exception('Width and height should be multiples of 16. w=%d, h=%d' % (width, height))
+    width = resize(width)
+    height = resize(height)
     return int(width), int(height)

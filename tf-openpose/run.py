@@ -40,6 +40,7 @@ if __name__ == '__main__':
 
     # estimate human poses from a single image !
     image = common.read_imgfile(args.image, None, None)
+
     if image is None:
         logger.error('Image can not be read, path=%s' % args.image)
         sys.exit(-1)

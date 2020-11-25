@@ -10,4 +10,6 @@ scikit-image
 scipy
 slidingwindow
 tqdm
+tensorflow == 1.15
+opencv-python
 git+https://github.com/ppwwyyxx/tensorpack.git

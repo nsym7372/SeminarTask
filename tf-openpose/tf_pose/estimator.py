@@ -11,7 +11,8 @@ import time
 from tf_pose import common
 from tf_pose.common import CocoPart
 from tf_pose.tensblur.smoother import Smoother
-import tensorflow.contrib.tensorrt as trt
+#import tensorflow.contrib.tensorrt as trt
+#from tensorflow.python.compiler.tensorrt import trt_convert as trt
 
 try:
     from tf_pose.pafprocess import pafprocess
@@ -411,6 +412,7 @@ class TfPoseEstimator:
         image_h, image_w = npimg.shape[:2]
         centers = {}
         for human in humans:
+            print(human.body_parts.keys()) #追加
             # draw point
             for i in range(common.CocoPart.Background.value):
                 if i not in human.body_parts.keys():

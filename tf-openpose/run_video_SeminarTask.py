@@ -18,6 +18,10 @@ video_outdir = './output'
 video_inputdir = './input'
 os.makedirs(img_outdir, exist_ok=True)
 
+def floor(size):
+  p = 0 if (size % 16 == 0) else (16 - size % 16)
+  return size + p
+  
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='tf-pose-estimation Video')
     parser.add_argument('mp4file', type=str, default='')
@@ -27,16 +31,19 @@ if __name__ == '__main__':
     # 動画読み込み
     cap = cv2.VideoCapture('{0}/{1}'.format(video_inputdir, args.mp4file))
     
-    w = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
-    h = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
-    fps = cap.get(cv2.CAP_PROP_FPS)
+    w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    fps = int(cap.get(cv2.CAP_PROP_FPS))
 
     outimg_files = []
     count = 0
 
     # 処理サイズ、内部16の倍数
-    inw = w + (16 - w % 16)
-    inh = h + (16 - h % 16)   
+    
+    inw = floor(w)
+    inh = floor(h) 
+
+    print(' size : {} / {}'.format(inw, inh))
 
     e = TfPoseEstimator(get_graph_path('mobilenet_thin'), target_size=(inw, inh))
 
