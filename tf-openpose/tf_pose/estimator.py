@@ -412,7 +412,7 @@ class TfPoseEstimator:
         image_h, image_w = npimg.shape[:2]
         centers = {}
         for human in humans:
-            print(human.body_parts.keys()) #追加
+
             # draw point
             for i in range(common.CocoPart.Background.value):
                 if i not in human.body_parts.keys():
@@ -422,6 +422,10 @@ class TfPoseEstimator:
                 center = (int(body_part.x * image_w + 0.5), int(body_part.y * image_h + 0.5))
                 centers[i] = center
                 cv2.circle(npimg, center, 3, common.CocoColors[i], thickness=3, lineType=8, shift=0)
+
+            #draw cog
+            print(human.body_parts.keys())
+
 
             # draw line
             for pair_order, pair in enumerate(common.CocoPairsRender):

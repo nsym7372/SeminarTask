@@ -13,9 +13,9 @@ from tf_pose.networks import get_graph_path, model_wh
 
 # movie_name = 'climbing2'
 
-img_outdir = './img'
-video_outdir = './output'
-video_inputdir = './input'
+img_outdir = './video_io/img'
+video_outdir = './video_io/output'
+video_inputdir = './video_io/input'
 os.makedirs(img_outdir, exist_ok=True)
 
 def floor(size):
@@ -29,7 +29,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # 動画読み込み
-    cap = cv2.VideoCapture('{0}/{1}'.format(video_inputdir, args.mp4file))
+    cap = cv2.VideoCapture(args.mp4file)
+    #cap = cv2.VideoCapture('{0}/{1}'.format(video_inputdir, args.mp4file))
     
     w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
