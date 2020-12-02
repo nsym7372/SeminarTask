@@ -22,6 +22,14 @@ def floor(size):
   p = 0 if (size % 16 == 0) else (16 - size % 16)
   return size + p
   
+def getCenter(humans):
+
+    ret = []
+    for human in humans:
+        ret.append(human.body_parts[8] + human.body_parts[11]) / 2
+
+    return ret
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='tf-pose-estimation Video')
     parser.add_argument('mp4file', type=str, default='')
@@ -49,7 +57,7 @@ if __name__ == '__main__':
     e = TfPoseEstimator(get_graph_path('mobilenet_thin'), target_size=(inw, inh))
 
     # 動画用の画像作成
-    outfile = '{0}/{1}'.format(video_outdir, args.mp4file)
+    outfile = '{0}/{1}'.format(video_outdir, os.path.basename(args.mp4file))
     fourcc = cv2.VideoWriter_fourcc('m','p','4', 'v')
     video  = cv2.VideoWriter(outfile, fourcc, fps, (w, h))
 
@@ -63,6 +71,7 @@ if __name__ == '__main__':
                 print('Image No.：{0}'.format(count))
 
             humans = e.inference(image, resize_to_default=(inw > 0 and inh > 0), upsample_size=4)
+            # centers = getCenter(humans)
             image = TfPoseEstimator.draw_humans(image, humans, imgcopy=False)
 
             # 画像出力
@@ -74,3 +83,7 @@ if __name__ == '__main__':
             break
     video.release()
     print("done")
+
+
+
+# ffmpeg -ss [開始地点(秒)] -i [入力する動画パス] -t [切り出す秒数] [出力する動画パス]

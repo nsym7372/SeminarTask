@@ -406,6 +406,16 @@ class TfPoseEstimator:
         return npimg_q
 
     @staticmethod
+    def _draw_dashed_line(npimg, x, height):
+        y = 0
+        while True:
+            if height <= y:
+                return
+
+            cv2.circle(npimg, (x, y), 1, common.CocoColors[3], thickness=-1, lineType=8, shift=0)
+            y = y + 10
+
+    @staticmethod
     def draw_humans(npimg, humans, imgcopy=False):
         if imgcopy:
             npimg = np.copy(npimg)
@@ -423,9 +433,16 @@ class TfPoseEstimator:
                 centers[i] = center
                 cv2.circle(npimg, center, 3, common.CocoColors[i], thickness=3, lineType=8, shift=0)
 
-            #draw cog
+            # 中心（丹田辺り）
             print(human.body_parts.keys())
 
+            if( 8 in human.body_parts.keys() and 11 in human.body_parts.keys() ):
+                rhip = human.body_parts[8]
+                lhip = human.body_parts[11]
+                print('rhip : {0}, {1} / lhip : {2}, {3}'.format(rhip.x, rhip.y, lhip.x, lhip.y))
+
+                c = (int(((rhip.x + lhip.x) / 2) * image_w + 0.5), int(((rhip.y + lhip.y) / 2) * image_h + 0.5))
+                cv2.circle(npimg, c, 3, common.CocoColors[3], thickness=3, lineType=8, shift=0)
 
             # draw line
             for pair_order, pair in enumerate(common.CocoPairsRender):
@@ -434,6 +451,19 @@ class TfPoseEstimator:
 
                 # npimg = cv2.line(npimg, centers[pair[0]], centers[pair[1]], common.CocoColors[pair_order], 3)
                 cv2.line(npimg, centers[pair[0]], centers[pair[1]], common.CocoColors[pair_order], 3)
+
+            # 支持基底面
+            # 右足
+            if 10 in human.body_parts.keys():
+                rAnkle_x = int(human.body_parts[10].x * image_w)
+                TfPoseEstimator._draw_dashed_line(npimg, rAnkle_x, image_h)
+                # cv2.line(npimg, (rAnkle_x, 0), (rAnkle_x, image_h), (0, 0, 0), 1, cv2.LINE_4)
+
+            # 左足
+            if 13 in human.body_parts.keys():
+                lAnkle_x = int(human.body_parts[13].x * image_w)
+                TfPoseEstimator._draw_dashed_line(npimg, lAnkle_x, image_h)
+                # cv2.line(npimg, (lAnkle_x, 0), (lAnkle_x, image_h), (0, 0, 0), 1, cv2.LINE_4)
 
         return npimg
 
