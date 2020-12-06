@@ -457,13 +457,15 @@ class TfPoseEstimator:
             if 10 in human.body_parts.keys():
                 rAnkle_x = int(human.body_parts[10].x * image_w)
                 TfPoseEstimator._draw_dashed_line(npimg, rAnkle_x, image_h)
-                # cv2.line(npimg, (rAnkle_x, 0), (rAnkle_x, image_h), (0, 0, 0), 1, cv2.LINE_4)
+                
 
             # 左足
             if 13 in human.body_parts.keys():
                 lAnkle_x = int(human.body_parts[13].x * image_w)
                 TfPoseEstimator._draw_dashed_line(npimg, lAnkle_x, image_h)
-                # cv2.line(npimg, (lAnkle_x, 0), (lAnkle_x, image_h), (0, 0, 0), 1, cv2.LINE_4)
+
+            # 不安定
+                
 
         return npimg
 
