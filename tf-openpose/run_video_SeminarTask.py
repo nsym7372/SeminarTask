@@ -31,6 +31,8 @@ def getCenter(humans):
     return ret
 
 if __name__ == '__main__':
+    start = time.perf_counter()
+
     parser = argparse.ArgumentParser(description='tf-pose-estimation Video')
     parser.add_argument('mp4file', type=str, default='')
     
@@ -82,6 +84,10 @@ if __name__ == '__main__':
         else:
             break
     video.release()
+
+    end = time.perf_counter()
+
+    print(end - start)
     print("done")
 
 

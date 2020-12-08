@@ -24,7 +24,7 @@
             "type": "python",
             "request": "launch",
             "program": "${workspaceRoot}/run_video_SeminarTask.py",
-            "args": ["video_io/source/videoplayback01_10.mp4"],
+            "args": ["video_io/source/VID_20201204_203814583.mp4"],
             "console": "integratedTerminal"
         }
     ]
