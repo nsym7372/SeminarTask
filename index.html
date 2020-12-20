@@ -49,31 +49,29 @@
 
       window.addEventListener("DOMContentLoaded", (event) => {
         process.chdir("./tf-openpose");
+        fs.unlink("out.jpg", (error) => {}); //古いファイルが残ってたら削除
       });
 
       function doit() {
         let filename = dialog.showOpenDialogSync(null, {
           properties: ["openFile"],
-          title: "Select a text file",
+          title: "Select a image file",
           defaultPath: ".",
-          // filters: [{ name: "text file", extensions: ["txt"] }],
+          filters: [{ name: "image file", extensions: ["jpg", "png"] }],
         });
 
         console.log(process.cwd());
-        
-
-        // args = ["run_SeminarTask.py", "--image", "C:\Users\image\Desktop\302c8cd3ed603f7221a1ecb79de3e9c0_3.jpg"];
         let py = spawn("python", [
           "run_SeminarTask.py",
           "--image",
-          "C:\Users\image\Desktop\302c8cd3ed603f7221a1ecb79de3e9c0_3.jpg",
+          filename
         ]);
+
         py.stdout.on("data", (data) => console.log("data : ", data.toString()));
         py.on("close", () => {
           let img = document.getElementById("Result");
           img.src = "./tf-openpose/out.jpg";
 
-          fs.unlink("out.jpg", (error) => {});  //使ったファイルは削除
           console.log("process done");
         });
       }

@@ -46,25 +46,25 @@ if __name__ == '__main__':
     # estimate human poses from a single image !
     image = common.read_imgfile(args.image, None, None)
     print(type(image))
-     print(image.shape)
-      # sys.exit()
-      e = TfPoseEstimator(get_graph_path(args.model), target_size=(w, h))
+    print(image.shape)
+    # sys.exit()
+    e = TfPoseEstimator(get_graph_path(args.model), target_size=(w, h))
 
-       if image is None:
-            logger.error('Image can not be read, path=%s' % args.image)
-            sys.exit(-1)
+    if image is None:
+        logger.error('Image can not be read, path=%s' % args.image)
+        sys.exit(-1)
 
-        t = time.time()
-        humans = e.inference(image, resize_to_default=(
-            w > 0 and h > 0), upsample_size=args.resize_out_ratio)
-        # print(type(humans))
-        # print(len(humans))
-        # print(type(humans[0]))
+    t = time.time()
+    humans = e.inference(image, resize_to_default=(
+        w > 0 and h > 0), upsample_size=args.resize_out_ratio)
+    # print(type(humans))
+    # print(len(humans))
+    # print(type(humans[0]))
 
-        elapsed = time.time() - t
+    elapsed = time.time() - t
 
-        logger.info('inference image: %s in %.4f seconds.' %
-                    (args.image, elapsed))
+    logger.info('inference image: %s in %.4f seconds.' %
+                (args.image, elapsed))
 
-        image = TfPoseEstimator.draw_humans(image, humans, imgcopy=False)
-        cv2.imwrite('out.jpg', image)
+    image = TfPoseEstimator.draw_humans(image, humans, imgcopy=False)
+    cv2.imwrite('out.jpg', image)
