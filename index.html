@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+    <meta charset="UTF-8" />
+
+    <title>Sample</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <button class="btn btn-primary" onclick="doit();">select file</button>
+      </div>
+      <div class="row">
+        <img id="Result" src="" alt="" />
+      </div>
+    </div>
+
+    <script>
+      const path = window.path;
+      const { BrowserWindow, dialog } = require("electron").remote;
+
+      const { spawn } = require("child_process");
+
+      function doit() {
+        let filenames = dialog.showOpenDialogSync(null, {
+          properties: ["openFile"],
+          title: "Select a text file",
+          defaultPath: ".",
+          // filters: [{ name: "text file", extensions: ["txt"] }],
+        });
+
+        process.chdir("./tf-openpose");
+        console.log(process.cwd());
+
+        command = `run_SeminarTask.py`;
+        let py = spawn("python", [command]);
+        py.stdout.on("data", (data) => console.log("data : ", data.toString()));
+        py.on("close", () => {
+          let img = document.getElementById("Result");
+          img.src = "./tf-openpose/out.jpg";
+
+          console.log("process done");
+        });
+      }
+    </script>
+  </body>
+</html>

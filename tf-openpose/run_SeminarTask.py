@@ -25,7 +25,7 @@ def resize(size):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='tf-pose-estimation run')
-    parser.add_argument('--image', type=str, default='./images/p1.jpg')
+    parser.add_argument('--image', type=str, default='./images/150415022548_TP_V.jpg')
     parser.add_argument('--model', type=str, default='cmu',
                         help='cmu / mobilenet_thin / mobilenet_v2_large / mobilenet_v2_small')
     parser.add_argument('--resize', type=str, default='432x368',
@@ -51,9 +51,9 @@ if __name__ == '__main__':
 
     t = time.time()
     humans = e.inference(image, resize_to_default=(w > 0 and h > 0), upsample_size=args.resize_out_ratio)
-    print(type(humans))
-    print(len(humans))
-    print(type(humans[0]))
+    # print(type(humans))
+    # print(len(humans))
+    # print(type(humans[0]))
  
     elapsed = time.time() - t
 
