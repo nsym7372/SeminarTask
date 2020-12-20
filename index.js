@@ -1,7 +1,6 @@
 "use strct";
 
 const { app, Menu, BrowserWindow } = require("electron");
-const path = require("path");
 
 // メインウィンドウはGCされないようにグローバル宣言
 let mainWindow = null;
@@ -34,7 +33,6 @@ function createWindow() {
   });
   mainWindow.webContents.openDevTools();
   mainWindow.loadFile("index.html");
-  //mainWindow.loadFile("changeMenu.html");
 }
 
 function createMenu() {
@@ -69,26 +67,3 @@ function createMenu() {
 
 createMenu();
 app.whenReady().then(createWindow);
-
-// // Electronの初期化完了後に実行
-// app.on("ready", () => {
-//   //ウィンドウサイズを1280*720（フレームサイズを含まない）に設定する
-//   mainWindow = new BrowserWindow({
-//     width: 1280,
-//     height: 720,
-//     useContentSize: true,
-//     webPreferences:{
-//       nodeIntegration: true,
-//       contextIsolation: true
-//     }
-//   });
-
-//   //使用するhtmlファイルを指定する
-//   mainWindow.loadURL(`file://${__dirname}/index.html`);
-//   mainWindow.webContents.openDevTools();
-
-//   // ウィンドウが閉じられたらアプリも終了
-//   mainWindow.on("closed", () => {
-//     mainWindow = null;
-//   });
-// });
