@@ -41,29 +41,39 @@
     </div>
 
     <script>
+      const fs = require("fs"); //fsをimportするので分割代入ではない
       const path = window.path;
       const { BrowserWindow, dialog } = require("electron").remote;
 
-      const { spawn } = require("child_process");
+      const { spawn } = require("child_process"); //child_process.spawn
+
+      window.addEventListener("DOMContentLoaded", (event) => {
+        process.chdir("./tf-openpose");
+      });
 
       function doit() {
-        let filenames = dialog.showOpenDialogSync(null, {
+        let filename = dialog.showOpenDialogSync(null, {
           properties: ["openFile"],
           title: "Select a text file",
           defaultPath: ".",
           // filters: [{ name: "text file", extensions: ["txt"] }],
         });
 
-        process.chdir("./tf-openpose");
         console.log(process.cwd());
+        
 
-        command = `run_SeminarTask.py`;
-        let py = spawn("python", [command]);
+        // args = ["run_SeminarTask.py", "--image", "C:\Users\image\Desktop\302c8cd3ed603f7221a1ecb79de3e9c0_3.jpg"];
+        let py = spawn("python", [
+          "run_SeminarTask.py",
+          "--image",
+          "C:\Users\image\Desktop\302c8cd3ed603f7221a1ecb79de3e9c0_3.jpg",
+        ]);
         py.stdout.on("data", (data) => console.log("data : ", data.toString()));
         py.on("close", () => {
           let img = document.getElementById("Result");
           img.src = "./tf-openpose/out.jpg";
 
+          fs.unlink("out.jpg", (error) => {});  //使ったファイルは削除
           console.log("process done");
         });
       }
